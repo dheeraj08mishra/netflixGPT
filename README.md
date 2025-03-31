@@ -1,7 +1,7 @@
-<<<<<<< HEAD
 # netflixGPT
-clone project for learning react js with firebase
-=======
+
+# clone project for learning react js with firebase
+
 mkdir netflix_gpt && cd netflix_gpt
 npm init -y
 
@@ -74,4 +74,9 @@ index.css
 @import "tailwindcss";
 
 index.html --> <link href="./index.css" type="text/css" rel="stylesheet" />
->>>>>>> ebf923b (initial commit with signin/up page and login validation)
+
+for firebase
+npm install firebase
+npm install -g firebase-tools
+firebase login
+firebase deploy

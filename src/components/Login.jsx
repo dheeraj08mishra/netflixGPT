@@ -1,6 +1,11 @@
 import Header from "./Header";
 import { checkValidation } from "../utils/Validate";
 import { useRef, useState } from "react";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
+import { auth } from "../../firebase";
 
 const Login = () => {
   const [error, setError] = useState({});
@@ -15,16 +20,62 @@ const Login = () => {
     setError({});
   };
 
-  const checkValidationData = () => {
-    const email = emailRef.current.value;
-    const password = passwordRef.current.value;
+  const checkInformation = () => {
     const name = nameRef.current ? nameRef.current.value : null;
+    return checkValidation(
+      emailRef.current.value,
+      passwordRef.current.value,
+      name
+    );
+  };
 
-    const validationError = checkValidation(email, password, name);
-    if (validationError) {
-      setError({ message: validationError });
+  const handleUserAuth = () => {
+    let validationInfo = checkInformation();
+    if (validationInfo) {
+      setError({ message: validationInfo, success: false });
       return;
     }
+    if (signUp) {
+      createUserWithEmailAndPassword(
+        auth,
+        emailRef.current.value,
+        passwordRef.current.value
+      )
+        .then((userCredential) => {
+          const user = userCredential.user;
+          console.log(user);
+          // ...
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          setError({
+            message: errorCode + "- " + errorMessage,
+            success: false,
+          });
+        });
+    } else {
+      signInWithEmailAndPassword(
+        auth,
+        emailRef.current.value,
+        passwordRef.current.value
+      )
+        .then((userCredential) => {
+          // Signed in
+          const user = userCredential.user;
+          console.log(user);
+          // ...
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          setError({
+            message: errorCode + "- " + errorMessage,
+            success: false,
+          });
+        });
+    }
+
     setError({ message: "Login Successful", success: true });
   };
 
@@ -84,8 +135,8 @@ const Login = () => {
           )}
 
           <button
-            onClick={checkValidationData}
-            className="w-full bg-red-600 p-3 rounded font-bold hover:bg-red-700 transition"
+            onClick={handleUserAuth}
+            className="w-full bg-red-600 p-3 rounded font-bold hover:bg-red-700 transition cursor-pointer"
           >
             {signUp ? "Sign Up" : "Sign In"}
           </button>
