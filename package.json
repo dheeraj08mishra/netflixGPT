@@ -19,5 +19,8 @@
   },
   "devDependencies": {
     "parcel": "^2.14.4"
+  },
+  "engines": {
+    "node": "18"
   }
 }
