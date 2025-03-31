@@ -1,0 +1,22 @@
+{
+  "name": "netflixgpt",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "parcel src/index.html",
+    "build": "parcel build src/index.html"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@tailwindcss/postcss": "^4.0.17",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "react-router-dom": "^6.30.0",
+    "tailwindcss": "^4.0.17"
+  },
+  "devDependencies": {
+    "parcel": "^2.14.4"
+  }
+}
