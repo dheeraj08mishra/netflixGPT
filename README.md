@@ -80,3 +80,14 @@ npm install firebase
 npm install -g firebase-tools
 firebase login
 firebase deploy
+
+redux
+npm install react-redux
+npm install @reduxjs/toolkit
+
+Create a Redux Store
+Create a Slice (Reducer + Actions)
+Provide the Store
+use Redux in Components
+
+onAuthStateChanged act as event handler. at body/app level

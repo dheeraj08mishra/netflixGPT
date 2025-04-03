@@ -4,8 +4,12 @@ import { useRef, useState } from "react";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  updateProfile,
 } from "firebase/auth";
 import { auth } from "../../firebase";
+import { useDispatch } from "react-redux";
+import { setUser } from "../utils/userSlice";
+import { user_icon } from "../utils/constant";
 
 const Login = () => {
   const [error, setError] = useState({});
@@ -14,6 +18,8 @@ const Login = () => {
   const emailRef = useRef(null);
   const passwordRef = useRef(null);
   const nameRef = useRef(null);
+
+  const dispatch = useDispatch();
 
   const toggleSignUp = () => {
     setSignUp(!signUp);
@@ -43,8 +49,30 @@ const Login = () => {
       )
         .then((userCredential) => {
           const user = userCredential.user;
-          console.log(user);
-          // ...
+          if (user) {
+            updateProfile(user, {
+              displayName: nameRef.current.value,
+              photoURL: user_icon,
+            })
+              .then(() => {
+                console.log(auth.currentUser);
+                const { email, photoURL, displayName, uid } = auth.currentUser;
+                dispatch(
+                  setUser({
+                    email: email,
+                    name: displayName,
+                    photoURL: photoURL,
+                    uid: uid,
+                  })
+                );
+              })
+              .catch((error) => {
+                setError({
+                  message: error.code + "- " + error.message,
+                  success: false,
+                });
+              });
+          }
         })
         .catch((error) => {
           const errorCode = error.code;
@@ -61,10 +89,8 @@ const Login = () => {
         passwordRef.current.value
       )
         .then((userCredential) => {
-          // Signed in
           const user = userCredential.user;
           console.log(user);
-          // ...
         })
         .catch((error) => {
           const errorCode = error.code;
