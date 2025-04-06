@@ -91,3 +91,9 @@ Provide the Store
 use Redux in Components
 
 onAuthStateChanged act as event handler. at body/app level
+
+controls=0: hides YouTube controls
+
+modestbranding=1: removes YouTube logo
+
+showinfo=0: hides video title (though not always respected anymore)

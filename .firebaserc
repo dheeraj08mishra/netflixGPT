@@ -1,5 +1,8 @@
 {
   "projects": {
-    "default": "netflixgpt-2f3d0"
-  }
+    "default": "moviegpt-bd9ff",
+    "staging": "moviegpt-bd9ff"
+  },
+  "targets": {},
+  "etags": {}
 }
