@@ -1,12 +1,14 @@
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setMovies, setTrailerId, addMovies } from "../utils/movieSlice";
 import { options } from "../utils/constant";
 
 const useNowPlaying = () => {
   const dispatch = useDispatch();
+  const movies = useSelector((store) => store.movies.movies || []);
 
   useEffect(() => {
+    if (movies.length > 0) return;
     const fetchMovies = async () => {
       try {
         const response = await fetch(
@@ -19,16 +21,13 @@ const useNowPlaying = () => {
           dispatch(setMovies(data.results));
           dispatch(setTrailerId(data.results[0].id));
           dispatch(addMovies(data.results));
-        } else {
-          console.error("No movies found:", data);
         }
       } catch (error) {
         console.error("Failed to fetch movies:", error);
       }
     };
-
     fetchMovies();
-  }, []);
+  }, [dispatch, movies.length]); // added dependencies
 };
 
 export default useNowPlaying;

@@ -10,6 +10,7 @@ import { auth } from "../../firebase";
 import { useDispatch } from "react-redux";
 import { setUser } from "../utils/userSlice";
 import { user_icon } from "../utils/constant";
+import { netflix_background } from "../utils/constant";
 
 const Login = () => {
   const [error, setError] = useState({});
@@ -112,7 +113,7 @@ const Login = () => {
         {/* Background Image */}
         <img
           className="absolute top-0 left-0 w-full h-full object-cover"
-          src="https://assets.nflxext.com/ffe/siteui/vlv3/fbf440b2-24a0-49f5-b2ba-a5cbe8ea8736/web/IN-en-20250324-TRIFECTA-perspective_d7c906ec-0531-47de-8ece-470d5061c88a_large.jpg"
+          src={netflix_background}
           alt="Netflix Background"
         />
 

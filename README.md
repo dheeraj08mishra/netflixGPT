@@ -97,3 +97,5 @@ controls=0: hides YouTube controls
 modestbranding=1: removes YouTube logo
 
 showinfo=0: hides video title (though not always respected anymore)
+
+rm -rf .parcel-cache dist. for HMR issue

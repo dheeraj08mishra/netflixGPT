@@ -1,6 +1,7 @@
 import { useSelector, useDispatch } from "react-redux";
 import { FaPlay } from "react-icons/fa";
 import { setTrailerId, setSelectedMovie } from "../utils/movieSlice";
+import { setGptResponse } from "../utils/gptSlice";
 import { useRef, useEffect, useState } from "react";
 import MovieModal from "./MovieModal";
 
@@ -12,6 +13,7 @@ const ListMovies = ({ dataShow, title }) => {
     if (dataShow === "popularMovies") return store.movies.popularMovies;
     if (dataShow === "topRatedMovies") return store.movies.topRatedMovies;
     if (dataShow === "upcomingMovies") return store.movies.addUpcomingMovies;
+    if (dataShow === "gptSearched") return store.gpt.gptResponse;
     return [];
   });
 
@@ -51,12 +53,13 @@ const ListMovies = ({ dataShow, title }) => {
   };
 
   return (
-    <div className="px-4 pt-6 pb-10 bg-gradient-to-t from-black/90 to-transparent">
+    // div is getting outside of the screen it should be inside the parent div
+    <div className="w-full overflow-hidden px-4 pt-6 pb-10 bg-gradient-to-t from-black/90 to-transparent">
       <h2 className="text-2xl font-bold text-white mb-4">{title}</h2>
 
       <div
         ref={scrollRef}
-        className="flex overflow-x-scroll overflow-y-hidden space-x-4 scrollbar-hide no-scrollbar scroll-smooth"
+        className="flex overflow-x-auto overflow-y-hidden space-x-4 scrollbar-hide scroll-smooth max-w-full"
       >
         {filteredMovies.map((movie) => (
           <div
@@ -65,8 +68,12 @@ const ListMovies = ({ dataShow, title }) => {
             className="relative min-w-[200px] h-[120px] md:min-w-[250px] md:h-[150px] lg:min-w-[300px] lg:h-[180px] flex-shrink-0 rounded-lg overflow-hidden bg-gray-900 hover:scale-105 hover:z-10 transition-transform duration-300 cursor-pointer"
           >
             <img
-              src={`https://image.tmdb.org/t/p/w500${movie.backdrop_path}`}
-              alt={movie.original_title}
+              src={
+                movie.backdrop_path
+                  ? `https://image.tmdb.org/t/p/w500${movie.backdrop_path}`
+                  : "https://via.placeholder.com/500x281?text=No+Image"
+              }
+              alt={movie.original_title || movie.title}
               className="w-full h-full object-cover"
             />
             <div className="absolute inset-0 bg-black bg-opacity-50 opacity-0 hover:opacity-100 flex items-center justify-center transition-opacity duration-300 group ">
@@ -85,7 +92,7 @@ const ListMovies = ({ dataShow, title }) => {
             </div>
             <div className="absolute bottom-0 w-full bg-gradient-to-t from-black to-transparent p-2">
               <h3 className="text-white text-sm font-semibold line-clamp-1">
-                {movie.original_title}
+                {movie.original_title || movie.title || "Untitled"}
               </h3>
             </div>
           </div>

@@ -1,10 +1,15 @@
 import { useEffect } from "react";
 import { options } from "../utils/constant";
 import { addTopRatedMovies, addMovies } from "../utils/movieSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+
 const useTopRated = () => {
   const dispatch = useDispatch();
+  const movies = useSelector((store) => store.movies.topRatedMovies || []);
+
   useEffect(() => {
+    if (movies.length > 0) return;
+
     const fetchTopRatedMovies = async () => {
       try {
         const response = await fetch(
@@ -12,11 +17,10 @@ const useTopRated = () => {
           options
         );
         const data = await response.json();
-        if (data.results && data.results.length > 0) {
+
+        if (data?.results?.length > 0) {
           dispatch(addTopRatedMovies(data.results));
           dispatch(addMovies(data.results));
-        } else {
-          console.error("No top-rated movies found:", data);
         }
       } catch (error) {
         console.error("Error fetching top-rated movies:", error);
@@ -24,6 +28,7 @@ const useTopRated = () => {
     };
 
     fetchTopRatedMovies();
-  }, []);
+  }, [dispatch, movies.length]); // added dependencies
 };
+
 export default useTopRated;
