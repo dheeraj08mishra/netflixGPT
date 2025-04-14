@@ -2,6 +2,7 @@ import { useSelector } from "react-redux";
 import VideoTitle from "./VideoTitle";
 import VideoBackGround from "./VideoBackGround";
 import useVideoBankGroundVideo from "../hooks/useVideoBankGroundVideo";
+import ShimmerUI from "./ShimmerUI";
 
 const PrimaryTrailerContainer = () => {
   const moviesList = useSelector((store) => store.movies.addMovies);
@@ -9,7 +10,11 @@ const PrimaryTrailerContainer = () => {
   useVideoBankGroundVideo({ movieId: selectedMovie?.id });
 
   if (!moviesList || moviesList.length === 0) {
-    return <div className="text-white text-center text-lg">Loading...</div>;
+    return (
+      <div className="relative w-full h-screen">
+        <ShimmerUI />
+      </div>
+    );
   }
 
   const currentMovie = selectedMovie || moviesList[0];
@@ -22,7 +27,7 @@ const PrimaryTrailerContainer = () => {
         <VideoTitle
           original_title={original_title}
           overview={overview}
-          backdrop_path={backdrop_path}
+          currentMovie={currentMovie}
         />
       </div>
     </div>

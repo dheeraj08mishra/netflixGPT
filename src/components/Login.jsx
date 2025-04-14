@@ -6,11 +6,12 @@ import {
   signInWithEmailAndPassword,
   updateProfile,
 } from "firebase/auth";
-import { auth } from "../../firebase";
+import { auth } from "../firebase/firebase";
 import { useDispatch } from "react-redux";
 import { setUser } from "../utils/userSlice";
 import { user_icon } from "../utils/constant";
 import { netflix_background } from "../utils/constant";
+import { setGptResponse } from "../utils/gptSlice";
 
 const Login = () => {
   const [error, setError] = useState({});
@@ -56,7 +57,6 @@ const Login = () => {
               photoURL: user_icon,
             })
               .then(() => {
-                console.log(auth.currentUser);
                 const { email, photoURL, displayName, uid } = auth.currentUser;
                 dispatch(
                   setUser({
@@ -66,12 +66,14 @@ const Login = () => {
                     uid: uid,
                   })
                 );
+                dispatch(setGptResponse([]));
               })
               .catch((error) => {
                 setError({
                   message: error.code + "- " + error.message,
                   success: false,
                 });
+                dispatch(setGptResponse([]));
               });
           }
         })
@@ -91,7 +93,7 @@ const Login = () => {
       )
         .then((userCredential) => {
           const user = userCredential.user;
-          console.log(user);
+          dispatch(setGptResponse([]));
         })
         .catch((error) => {
           const errorCode = error.code;
@@ -100,6 +102,7 @@ const Login = () => {
             message: errorCode + "- " + errorMessage,
             success: false,
           });
+          dispatch(setGptResponse([]));
         });
     }
 

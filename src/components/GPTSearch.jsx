@@ -7,6 +7,7 @@ import ListMovies from "./ListMovies";
 
 const GPTSearch = () => {
   const [gptError, setGptError] = useState("");
+  const [loading, setLoading] = useState(false);
   const gptTextRef = useRef(null);
   const dispatch = useDispatch();
   const answer = useSelector((store) => store.gpt.gptResponse);
@@ -17,10 +18,14 @@ const GPTSearch = () => {
   });
 
   const handleGPTSearch = async () => {
-    const query = gptTextRef.current.value;
+    const query = gptTextRef.current.value.trim();
     if (!query) return;
 
     const prompt = `You are a movie search assistant. Based on this request: "${query}", return a comma-separated list of movie names like: movie1, movie2, movie3.`;
+
+    setLoading(true);
+    setGptError("");
+    dispatch(setGptResponse([]));
 
     try {
       const chatCompletion = await openai.chat.completions.create({
@@ -30,20 +35,7 @@ const GPTSearch = () => {
 
       const content = chatCompletion.choices?.[0]?.message?.content;
       if (!content) {
-        dispatch(setGptResponse([]));
-        return;
-      }
-
-      // ✨ Reject if it's an explanation or refusal
-      if (
-        content.toLowerCase().includes("i'm sorry") ||
-        content.toLowerCase().includes("cannot provide") ||
-        content.split(",").length <= 1
-      ) {
-        dispatch(setGptResponse([]));
-        setGptError(
-          "Please try a more specific query. GPT didn't return movie names."
-        );
+        setGptError("No response from GPT. Please try again.");
         return;
       }
 
@@ -57,6 +49,11 @@ const GPTSearch = () => {
         )
         .filter((name) => name.length > 0);
 
+      if (movieNames.length === 0) {
+        setGptError("No recognizable movie names. Try rephrasing your query.");
+        return;
+      }
+
       const moviePromises = movieNames.map((name) =>
         fetch(
           `https://api.themoviedb.org/3/search/movie?query=${encodeURIComponent(
@@ -67,29 +64,40 @@ const GPTSearch = () => {
       );
 
       const movieResults = await Promise.all(moviePromises);
+
       const movies = movieResults
         .map((result) => result.results?.[0])
         .filter(Boolean);
 
       dispatch(setGptResponse(movies));
+
+      if (movies.length === 0) {
+        setGptError("No movies found from GPT suggestions. Try again.");
+      } else {
+        setGptError(""); // Clear any previous error
+      }
     } catch (err) {
       console.error("OpenAI error:", err);
-      dispatch(setGptResponse([]));
+      setGptError("Error fetching data. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
-  // Debug: log GPT results
   useEffect(() => {
     console.log("Redux GPT Results:", answer);
   }, [answer]);
 
   return (
     <div className="relative h-screen w-full">
+      {/* Background */}
       <img
         src={netflix_background}
         alt="Netflix background"
         className="absolute top-0 left-0 w-full h-full object-cover opacity-80"
       />
+
+      {/* Content */}
       <div className="relative z-10 flex flex-col items-center justify-center h-full">
         <form onSubmit={(e) => e.preventDefault()} className="text-center">
           <h1 className="text-4xl font-bold text-white mb-6">
@@ -109,15 +117,22 @@ const GPTSearch = () => {
           </button>
         </form>
 
-        <div className="bg-black w-full mx-auto">
-          {answer && answer.length > 0 && (
+        <div className="bg-black w-full mx-auto min-h-[200px] mt-4 px-4 py-6">
+          {loading && (
+            <p className="text-white text-center animate-pulse">
+              🔍 Searching...
+            </p>
+          )}
+
+          {gptError && !loading && (
+            <p className="text-red-500 text-center mt-4">{gptError}</p>
+          )}
+
+          {answer && answer.length > 0 && !loading && (
             <ListMovies
               dataShow={"gptSearched"}
               title={"GPT Searched Movies"}
             />
-          )}
-          {gptError && (
-            <p className="text-red-500 text-center mt-4">{gptError}</p>
           )}
         </div>
       </div>
