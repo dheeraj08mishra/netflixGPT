@@ -2,6 +2,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Login from "./Login";
 import Browse from "./Browse";
 import Error from "./Error";
+import WatchList from "./WatchList";
 
 const router = createBrowserRouter([
   {
@@ -15,6 +16,10 @@ const router = createBrowserRouter([
   {
     path: "/error",
     element: <Error />,
+  },
+  {
+    path: "/watchList",
+    element: <WatchList />,
   },
 ]);
 

@@ -1,11 +1,13 @@
 import { useEffect } from "react";
 import { options } from "../utils/constant";
 import { addUpcomingMovies, addMovies } from "../utils/movieSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 const useUpcoming = () => {
   const dispatch = useDispatch();
+  const movies = useSelector((store) => store.movies.upcomingMovies || []);
   useEffect(() => {
     const fetchUpcoming = async () => {
+      if (movies.length > 0) return;
       try {
         const response = await fetch(
           "https://api.themoviedb.org/3/movie/upcoming",
@@ -15,8 +17,6 @@ const useUpcoming = () => {
         if (data.results && data.results.length > 0) {
           dispatch(addUpcomingMovies(data.results));
           dispatch(addMovies(data.results));
-        } else {
-          console.error("No top-rated movies found:", data);
         }
       } catch (error) {
         console.error("Error fetching top-rated movies:", error);
@@ -24,6 +24,6 @@ const useUpcoming = () => {
     };
 
     fetchUpcoming();
-  }, []);
+  }, [dispatch, movies.length]); // added dependencies
 };
 export default useUpcoming;

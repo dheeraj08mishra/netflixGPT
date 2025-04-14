@@ -6,10 +6,12 @@ import {
   signInWithEmailAndPassword,
   updateProfile,
 } from "firebase/auth";
-import { auth } from "../../firebase";
+import { auth } from "../firebase/firebase";
 import { useDispatch } from "react-redux";
 import { setUser } from "../utils/userSlice";
 import { user_icon } from "../utils/constant";
+import { netflix_background } from "../utils/constant";
+import { setGptResponse } from "../utils/gptSlice";
 
 const Login = () => {
   const [error, setError] = useState({});
@@ -55,7 +57,6 @@ const Login = () => {
               photoURL: user_icon,
             })
               .then(() => {
-                console.log(auth.currentUser);
                 const { email, photoURL, displayName, uid } = auth.currentUser;
                 dispatch(
                   setUser({
@@ -65,12 +66,14 @@ const Login = () => {
                     uid: uid,
                   })
                 );
+                dispatch(setGptResponse([]));
               })
               .catch((error) => {
                 setError({
                   message: error.code + "- " + error.message,
                   success: false,
                 });
+                dispatch(setGptResponse([]));
               });
           }
         })
@@ -90,7 +93,7 @@ const Login = () => {
       )
         .then((userCredential) => {
           const user = userCredential.user;
-          console.log(user);
+          dispatch(setGptResponse([]));
         })
         .catch((error) => {
           const errorCode = error.code;
@@ -99,6 +102,7 @@ const Login = () => {
             message: errorCode + "- " + errorMessage,
             success: false,
           });
+          dispatch(setGptResponse([]));
         });
     }
 
@@ -112,7 +116,7 @@ const Login = () => {
         {/* Background Image */}
         <img
           className="absolute top-0 left-0 w-full h-full object-cover"
-          src="https://assets.nflxext.com/ffe/siteui/vlv3/fbf440b2-24a0-49f5-b2ba-a5cbe8ea8736/web/IN-en-20250324-TRIFECTA-perspective_d7c906ec-0531-47de-8ece-470d5061c88a_large.jpg"
+          src={netflix_background}
           alt="Netflix Background"
         />
 

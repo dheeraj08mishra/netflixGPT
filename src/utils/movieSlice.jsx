@@ -10,6 +10,7 @@ const movieSlice = createSlice({
     topRatedMovies: [],
     addUpcomingMovies: [],
     addMovies: [],
+    watchList: [],
   },
   reducers: {
     setMovies: (state, action) => {

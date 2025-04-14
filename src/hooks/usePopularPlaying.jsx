@@ -1,12 +1,14 @@
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addPopularMovies, addMovies } from "../utils/movieSlice";
 import { options } from "../utils/constant";
 
 const usePopularPlaying = () => {
   const dispatch = useDispatch();
+  const movies = useSelector((store) => store.movies.popularMovies || []);
 
   useEffect(() => {
+    if (movies.length > 0) return;
     const fetchMovies = async () => {
       try {
         const response = await fetch(
@@ -18,8 +20,6 @@ const usePopularPlaying = () => {
         if (data.results && data.results.length > 0) {
           dispatch(addPopularMovies(data.results));
           dispatch(addMovies(data.results));
-        } else {
-          console.error("No movies found:", data);
         }
       } catch (error) {
         console.error("Failed to fetch movies:", error);
@@ -27,7 +27,7 @@ const usePopularPlaying = () => {
     };
 
     fetchMovies();
-  }, []);
+  }, [dispatch, movies.length]);
 };
 
 export default usePopularPlaying;
