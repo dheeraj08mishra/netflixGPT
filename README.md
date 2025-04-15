@@ -25,7 +25,7 @@ This is a full-featured Netflix clone built using **React**, **Redux**, **Tailwi
 
 ## 🧑‍💻 Developer
 
-- **Your Name** – [LinkedIn](https://linkedin.com/in/dheeraj08mishra)
+- **Dheeraj Mishra** – [LinkedIn](https://linkedin.com/in/dheeraj08mishra)
 
 ## 📂 Setup Instructions
 
