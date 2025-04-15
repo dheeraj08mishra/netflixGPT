@@ -1,101 +1,35 @@
-# netflixGPT
+# 🎬 Netflix Clone with GPT Search
 
-# clone project for learning react js with firebase
+This is a full-featured Netflix clone built using **React**, **Redux**, **Tailwind CSS**, **Firebase Auth**, **TMDB API**, and **OpenAI GPT-3.5** for intelligent movie search.
 
-mkdir netflix_gpt && cd netflix_gpt
-npm init -y
+## 🚀 Live Demo
 
-npm install react react-dom
-npm install -D parcel
+[View Live Site](https://moviegpt-bd9ff.web.app/)
 
-mkdir src
-mkdir src/components
-touch src/index.html src/index.js src/components/App.jsx
+## 🔥 Features
 
-index.html-> emmet + js src + div--< root>
-index.js -> import app.jsx and create root and render app
+- 🔐 Firebase Auth (Sign Up, Sign In, Sign Out)
+- 🧠 GPT-powered Movie Search
+- 🎞 TMDB-powered Movie Browsing (Popular, Trending, Upcoming)
+- 📺 Responsive UI (Built with Tailwind CSS)
+- 💾 Firebase Watchlist Sync
 
-package.json -->
-remove ->"main": "index.js",
-update ->"scripts": {
-"start": "parcel src/index.html",
-"build": "parcel build src/index.html"
-},
+## 🛠 Tech Stack
 
-npm install react-router-dom@6
+- React + Redux
+- Firebase Authentication
+- OpenAI API
+- TMDB API
+- Tailwind CSS
+- Vercel / Firebase Hosting
 
-index.js ==>
-import App from "./components/App";
-import Body from "./components/Body";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
-const browserRouter = createBrowserRouter([
-{
-path: "/",
-element: <App />,
-children: [
-{
-path: "/browse",
-element: <Body />,
-},
-],
-},
-]);
+## 🧑‍💻 Developer
 
-ReactDOM.createRoot(document.getElementById("root")).render(
-<React.StrictMode>
-<RouterProvider router={browserRouter} />
-</React.StrictMode>
-);
+- **Your Name** – [LinkedIn](https://linkedin.com/in/dheeraj08mishra)
 
-App.jsx====>
-import { Outlet } from "react-router-dom";
-const App = () => {
-return (
-<>
+## 📂 Setup Instructions
 
-<Header />
-<Outlet />
-</>
-);
-};
-
-for tailwind
-npm install parcel
-npm install tailwindcss @tailwindcss/postcss
-
-.postcssrc
-{
-"plugins": {
-"@tailwindcss/postcss": {}
-}
-}
-
-index.css
-@import "tailwindcss";
-
-index.html --> <link href="./index.css" type="text/css" rel="stylesheet" />
-
-for firebase
-npm install firebase
-npm install -g firebase-tools
-firebase login
-firebase deploy
-
-redux
-npm install react-redux
-npm install @reduxjs/toolkit
-
-Create a Redux Store
-Create a Slice (Reducer + Actions)
-Provide the Store
-use Redux in Components
-
-onAuthStateChanged act as event handler. at body/app level
-
-controls=0: hides YouTube controls
-
-modestbranding=1: removes YouTube logo
-
-showinfo=0: hides video title (though not always respected anymore)
-
-rm -rf .parcel-cache dist. for HMR issue
+1. Clone the repo
+2. `npm install`
+3. Create a `.env` file with your Firebase and OpenAI API keys
+4. `npm run dev`
